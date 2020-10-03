@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="utf-8" />
+    <title>App</title>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="//cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+        <!-- <link type="text/css" rel="stylesheet" href="/assets/css/common.css" /> -->
+        <style>
+            .container .header {
+                width: 100%;
+                height: 15vh;
+                background: cadetblue;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .none {
+                display: none !important;
+            }
+            .container .background {
+                height: 100%;
+                width: 100%;
+                position: fixed;
+                background: #4c4848;
+                opacity: 0.8;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .option.cate {
+                margin-top: 15px;
+                height: auto;
+                display: grid;
+                grid-template-columns: repeat(3, 33.33%);
+            }
+            .container .header h2 {
+                color: white;
+                font-size: 45px;
+            }
+            .container .body {
+                height: 85vh;
+                background: azure;
+            }
+            .input-link-crawl {
+                padding-top: 20px;
+                margin: 0 auto;
+                width: fit-content;
+            }
+            .input-content {
+                padding-top: 5px;
+            }
+            .input-content input[type='text'] {
+                height: 30px;
+                width: 40vh;
+            }
+            .btn-database {
+                background-color: aqua;
+            }
+            .input-link-crawl button {
+                border: 1px solid;
+                height: 35px;
+                margin-left: 15px;
+                width: auto;
+            }
+            .log-screen {
+                overflow: auto;
+                height: 60vh;
+                width: 80%;
+                margin: 50px auto;
+                background: darkslategrey;
+            }
+            .log-screen p:first-child {
+                margin-top: 20px;
+            }
+            .log-screen p:last-child {
+                margin-bottom: 20px;
+            }
+            .log-screen p {
+                padding-left: 25px;
+                margin: 0;
+                color: white;
+            }
+            .lds-ellipsis {
+                display: inline-block;
+                position: relative;
+                width: 80px;
+                height: 80px;
+            }
+            .lds-ellipsis div {
+                position: absolute;
+                top: 33px;
+                width: 13px;
+                height: 13px;
+                border-radius: 50%;
+                background: #0093fb;
+                animation-timing-function: cubic-bezier(0, 1, 1, 0);
+            }
+            .lds-ellipsis div:nth-child(1) {
+                left: 8px;
+                animation: lds-ellipsis1 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(2) {
+                left: 8px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(3) {
+                left: 32px;
+                animation: lds-ellipsis2 0.6s infinite;
+            }
+            .lds-ellipsis div:nth-child(4) {
+                left: 56px;
+                animation: lds-ellipsis3 0.6s infinite;
+            }
+            @keyframes lds-ellipsis1 {
+                0% {
+                    transform: scale(0);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+            @keyframes lds-ellipsis3 {
+                0% {
+                    transform: scale(1);
+                }
+                100% {
+                    transform: scale(0);
+                }
+            }
+            @keyframes lds-ellipsis2 {
+                0% {
+                    transform: translate(0, 0);
+                }
+                100% {
+                    transform: translate(24px, 0);
+                }
+            }
+            .option p {
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="none background">
+                <div class="lds-ellipsis">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="header">
+                <h2>
+                    CRAWL TOOL
+                </h2>
+            </div>
+            <div class="body">
+                <div class="input-link-crawl">
+                    <div class="option">
+                        <div class="input-group mb-3">
+                            <select
+                                class="custom-select"
+                                id="inputGroupSelect02"
+                                name="type"
+                            >
+                                <option value="axios" selected
+                                    >Crawl bằng cách lấy DOM từ http
+                                    request</option
+                                >
+                                <option value="pupperteer"
+                                    >Crawl bằng cách giả lập browser =>
+                                    automatic</option
+                                >
+                            </select>
+                            <div class="input-group-append">
+                                <label
+                                    class="input-group-text"
+                                    for="inputGroupSelect02"
+                                    >Chọn Cách chạy</label
+                                >
+                            </div>
+                        </div>
+                        <div class="none" id="headless">
+                            <input type="checkbox" name="headless" />
+                            <label for="headless">Ẩn Browser</label>
+                        </div>
+                    </div>
+                    <div class="input-content">
+                        <input
+                            type="text"
+                            name="link-crawl"
+                            value="http://truyenchon.com/"
+                            readonly="true"
+                            placeholder="điền link bạn muốn cào dữ liệu"
+                            required="true"
+                        />
+                        <button class="btn-crawl" action="get-cate">
+                            Thu thập danh mục
+                        </button>
+                        <button class="btn-crawl none" action="start">
+                            START
+                        </button>
+                        <button class="btn-database">View Data Crawled</button>
+                    </div>
+                    <div class="option cate none">
+                        <p>
+                            <input
+                                type="checkbox"
+                                name="allCate"
+                                value="all"
+                                checked
+                            />
+                            <label for="allCate">All</label>
+                        </p>
+                    </div>
+                </div>
+                <div class="log-screen"></div>
+            </div>
+            <div class="footer"></div>
+        </div>
+        <script>
+            let cate = [];
+            $('.btn-crawl[action="get-cate"]').on('click', function() {
+                $('.background').removeClass('none');
+                $.ajax({
+                    method: 'POST',
+                    url: window.location.href + 'tool/get-cate',
+                    data: {
+                        url: $('input[name="link-crawl"]').val(),
+                        headless: $('input[name="headless"]').is(':checked'),
+                        type: $('select[name="type"]')[0].value,
+                    },
+                    success: data => {
+                        $('.option').removeClass('none');
+                        $('.btn-crawl[action="start"]').removeClass('none');
+                        $('.btn-crawl[action="get-cate"]').addClass('none');
+                        $('.background').addClass('none');
+                        for (let [index, item] of data.data.entries()) {
+                            cate.push(item.name);
+                            $('.option.cate')
+                                .append(`<p><input type="checkbox" class="cateSelect" name="Cate[${index}]" value="${item.name}" checked onchange="selectCate(event)"/>
+              <label for="Cate[${index}]">${item.name}</label></p>`);
+                        }
+                    },
+                });
+            });
+            $('.btn-crawl[action="start').on('click', function() {
+                const action = $(this).attr('action');
+                $('.btn-crawl[action="start')[0].setAttribute('disabled', true);
+                $.ajax({
+                    method: 'POST',
+                    url: window.location.href + 'tool/start',
+                    data: {
+                        url: $('input[name="link-crawl"]').val(),
+                        headless: $('input[name="headless"]').is(':checked'),
+                        category: cate,
+                        type: $('select[name="type"]')[0].value,
+                    },
+                    success: () => {
+                        $('.btn-crawl[action="start')[0].removeAttribute(
+                            'disabled',
+                        );
+                    },
+                });
+            });
+            $('select[name="type"]').on('change', function() {
+                if ($(this)[0].value === 'pupperteer') {
+                    $('#headless').removeClass('none');
+                } else {
+                    $('#headless').addClass('none');
+                }
+            });
+            $('input[name="allCate"]').change(function() {
+                let checked;
+                if (this.checked) {
+                    checked = true;
+                } else {
+                    cate = [];
+                    checked = false;
+                }
+                let arrInput = $('.option.cate p input.cateSelect');
+                arrInput.each(index => {
+                    arrInput[index].checked = checked;
+                    if (arrInput[index].checked) {
+                        cate.push(arrInput[index].value);
+                    } else {
+                        removeArr(cate, arrInput[index].value);
+                    }
+                });
+            });
+            const selectCate = event => {
+                const target = event.target;
+                if (target.checked) {
+                    cate.push(target.value);
+                } else {
+                    $('input[name="allCate"]')[0].checked = false;
+                    removeArr(cate, target.value);
+                }
+            };
+            var ws = new WebSocket('ws://localhost:3002');
+            ws.onopen = () => {
+                ws.send('test connect');
+            };
+            ws.onmessage = async res => {
+                console.log('res', res);
+                $('.log-screen').append(`<p>${res.data}</p>`);
+                await scrollDown();
+            };
+            removeArr = (arr, item) => {
+                let index = arr.indexOf(item);
+                arr.splice(index, 1);
+            };
+            const scrollDown = async () => {
+                var divScroll = document.querySelector('.log-screen');
+                divScroll.scrollTop = divScroll.scrollHeight;
+            };
+        </script>
+    </body>
+</html>
